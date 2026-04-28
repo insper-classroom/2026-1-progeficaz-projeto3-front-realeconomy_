@@ -2,10 +2,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import Login from './pages/Login.jsx'
 import Register from './pages/Register'
+import Navbar from './components/Navbar'
 
 function App() {
     return (
         <BrowserRouter>
+            <Navbar />
             <Routes>
                 <Route path="/" element={<div>Home</div>} />
                 <Route path="/imoveis/:id" element={<div>Detalhe</div>} />
