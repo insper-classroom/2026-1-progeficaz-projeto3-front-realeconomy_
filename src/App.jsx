@@ -3,13 +3,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register'
 import Navbar from './components/Navbar'
+import Home from './pages/Home'
 
 function App() {
     return (
         <BrowserRouter>
             <Navbar />
             <Routes>
-                <Route path="/" element={<div>Home</div>} />
+                <Route path="/" element={<Home />} />
                 <Route path="/imoveis/:id" element={<div>Detalhe</div>} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
