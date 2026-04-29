@@ -19,6 +19,9 @@ function Navbar() {
                         <span>Olá, {usuario.nome}</span>
                         <Link to="/meus-imoveis">Meus Imóveis</Link>
                         <Link to="/imoveis/novo">Anunciar</Link>
+                        {usuario.role === 'admin' && (
+                            <Link to="/admin">Admin</Link>
+                        )}
                         <button onClick={handleLogout}>Sair</button>
                     </>
                 ) : (

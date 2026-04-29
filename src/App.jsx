@@ -9,6 +9,7 @@ import NovoImovel from './pages/NovoImovel'
 import MeusImoveis from './pages/MeusImoveis'
 import EditarImovel from './pages/EditarImovel'
 import RotaPrivada from './components/RotaPrivada'
+import Admin from './pages/Admin'
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/meus-imoveis" element={<RotaPrivada><MeusImoveis /></RotaPrivada>} />
                 <Route path="/imoveis/novo" element={<RotaPrivada><NovoImovel /></RotaPrivada>} />
                 <Route path="/imoveis/:id/editar" element={<RotaPrivada><EditarImovel /></RotaPrivada>} />
+                <Route path="/admin" element={<RotaPrivada><Admin /></RotaPrivada>} />
             </Routes>
         </BrowserRouter>
     )
