@@ -21,39 +21,53 @@ function EditarImovel() {
     })
     const [erro, setErro] = useState('')
     const [buscandoCep, setBuscandoCep] = useState(false)
+    const [cidadesDisponiveis, setCidadesDisponiveis] = useState([])
+    const [cidadeValida, setCidadeValida] = useState(true)
 
     const TIPOS_IMOVEL = ['casa', 'apartamento', 'terreno', 'comercial', 'chacara']
 
     useEffect(() => {
-        async function buscarImovel() {
-            try {
-                const resposta = await api.get(`/imoveis/${id}`)
-                const imovel = resposta.data
-                setForm({
-                    tipo_imovel: imovel.tipo_imovel,
-                    tipo_negocio: imovel.tipo_negocio,
-                    cep: imovel.cep,
-                    logradouro: imovel.logradouro || '',
-                    numero: imovel.numero,
-                    complemento: imovel.complemento || '',
-                    bairro: imovel.bairro || '',
-                    cidade: imovel.cidade || '',
-                    estado: imovel.estado || '',
-                    preco_venda: imovel.preco_venda || '',
-                    preco_aluguel: imovel.preco_aluguel || '',
-                    descricao: imovel.descricao
-                })
-            } catch (err) {
-                console.error(err)
-                navigate('/meus-imoveis')
-            }
-        }
+        buscarCidades()
         buscarImovel()
     }, [id])
+
+    async function buscarCidades() {
+        try {
+            const resposta = await api.get('/cidades')
+            setCidadesDisponiveis(resposta.data)
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    async function buscarImovel() {
+        try {
+            const resposta = await api.get(`/imoveis/${id}`)
+            const imovel = resposta.data
+            setForm({
+                tipo_imovel: imovel.tipo_imovel,
+                tipo_negocio: imovel.tipo_negocio,
+                cep: imovel.cep,
+                logradouro: imovel.logradouro || '',
+                numero: imovel.numero,
+                complemento: imovel.complemento || '',
+                bairro: imovel.bairro || '',
+                cidade: imovel.cidade || '',
+                estado: imovel.estado || '',
+                preco_venda: imovel.preco_venda || '',
+                preco_aluguel: imovel.preco_aluguel || '',
+                descricao: imovel.descricao
+            })
+        } catch (err) {
+            console.error(err)
+            navigate('/meus-imoveis')
+        }
+    }
 
     async function handleCep(e) {
         const cep = e.target.value.replace(/\D/g, '')
         setForm(prev => ({ ...prev, cep: e.target.value }))
+        setCidadeValida(null)
 
         if (cep.length === 8) {
             setBuscandoCep(true)
@@ -68,6 +82,17 @@ function EditarImovel() {
                         cidade: dados.localidade || '',
                         estado: dados.uf || ''
                     }))
+
+                    const valida = cidadesDisponiveis.some(
+                        c => c.nome.toLowerCase() === dados.localidade.toLowerCase()
+                    )
+                    setCidadeValida(valida)
+
+                    if (!valida) {
+                        setErro(`A cidade ${dados.localidade} não está disponível para anúncios`)
+                    } else {
+                        setErro('')
+                    }
                 } else {
                     setErro('CEP não encontrado')
                 }
@@ -95,6 +120,11 @@ function EditarImovel() {
     async function handleSubmit(e) {
         e.preventDefault()
         setErro('')
+
+        if (!cidadeValida) {
+            setErro('Cidade não disponível para anúncios')
+            return
+        }
 
         if (form.tipo_negocio.length === 0) {
             setErro('Selecione pelo menos um tipo de negócio')
@@ -124,6 +154,18 @@ function EditarImovel() {
 
     return (
         <div>
+            {/* Cidades disponíveis */}
+            <div>
+                <p>Cidades disponíveis para anúncios:</p>
+                <div>
+                    {cidadesDisponiveis.map(cidade => (
+                        <span key={cidade._id}>
+                            {cidade.nome} — {cidade.estado}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
             <h1>Editar Imóvel</h1>
             <form onSubmit={handleSubmit}>
 
@@ -176,6 +218,8 @@ function EditarImovel() {
                         maxLength={9}
                     />
                     {buscandoCep && <span>Buscando CEP...</span>}
+                    {cidadeValida === true && <span>✅ Cidade disponível!</span>}
+                    {cidadeValida === false && <span>❌ Cidade não disponível</span>}
                 </div>
 
                 <div>
@@ -186,11 +230,6 @@ function EditarImovel() {
                 <div>
                     <label>Estado</label>
                     <input type="text" value={form.estado} disabled />
-                </div>
-
-                <div>
-                    <label>Bairro</label>
-                    <input type="text" name="bairro" value={form.bairro} onChange={handleChange} />
                 </div>
 
                 <div>
@@ -209,12 +248,17 @@ function EditarImovel() {
                 </div>
 
                 <div>
+                    <label>Bairro</label>
+                    <input type="text" name="bairro" value={form.bairro} onChange={handleChange} />
+                </div>
+
+                <div>
                     <label>Descrição</label>
                     <textarea name="descricao" value={form.descricao} onChange={handleChange} />
                 </div>
 
                 {erro && <p>{erro}</p>}
-                <button type="submit">Salvar alterações</button>
+                <button type="submit" disabled={cidadeValida === false}>Salvar alterações</button>
                 <button type="button" onClick={() => navigate('/meus-imoveis')}>Cancelar</button>
             </form>
         </div>

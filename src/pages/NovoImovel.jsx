@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 
@@ -19,13 +19,28 @@ function NovoImovel() {
     })
     const [erro, setErro] = useState('')
     const [buscandoCep, setBuscandoCep] = useState(false)
+    const [cidadesDisponiveis, setCidadesDisponiveis] = useState([])
+    const [cidadeValida, setCidadeValida] = useState(null)
     const navigate = useNavigate()
 
     const TIPOS_IMOVEL = ['casa', 'apartamento', 'terreno', 'comercial', 'chacara']
 
+    useEffect(() => {
+        async function buscarCidades() {
+            try {
+                const resposta = await api.get('/cidades')
+                setCidadesDisponiveis(resposta.data)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        buscarCidades()
+    }, [])
+
     async function handleCep(e) {
         const cep = e.target.value.replace(/\D/g, '')
         setForm(prev => ({ ...prev, cep: e.target.value }))
+        setCidadeValida(null)
 
         if (cep.length === 8) {
             setBuscandoCep(true)
@@ -40,6 +55,17 @@ function NovoImovel() {
                         cidade: dados.localidade || '',
                         estado: dados.uf || ''
                     }))
+
+                    const valida = cidadesDisponiveis.some(
+                        c => c.nome.toLowerCase() === dados.localidade.toLowerCase()
+                    )
+                    setCidadeValida(valida)
+
+                    if (!valida) {
+                        setErro(`A cidade ${dados.localidade} não está disponível para anúncios`)
+                    } else {
+                        setErro('')
+                    }
                 } else {
                     setErro('CEP não encontrado')
                 }
@@ -67,6 +93,11 @@ function NovoImovel() {
     async function handleSubmit(e) {
         e.preventDefault()
         setErro('')
+
+        if (!cidadeValida) {
+            setErro('Cidade não disponível para anúncios')
+            return
+        }
 
         if (form.tipo_negocio.length === 0) {
             setErro('Selecione pelo menos um tipo de negócio')
@@ -98,6 +129,18 @@ function NovoImovel() {
 
     return (
         <div>
+            {/* Cidades disponíveis */}
+            <div>
+                <p>Cidades disponíveis para anúncios:</p>
+                <div>
+                    {cidadesDisponiveis.map(cidade => (
+                        <span key={cidade._id}>
+                            {cidade.nome} — {cidade.estado}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
             <h1>Anunciar Imóvel</h1>
             <form onSubmit={handleSubmit}>
 
@@ -150,11 +193,8 @@ function NovoImovel() {
                         maxLength={9}
                     />
                     {buscandoCep && <span>Buscando CEP...</span>}
-                </div>
-
-                <div>
-                    <label>Estado</label>
-                    <input type="text" value={form.estado} disabled />
+                    {cidadeValida === true && <span>✅ Cidade disponível!</span>}
+                    {cidadeValida === false && <span>❌ Cidade não disponível</span>}
                 </div>
 
                 <div>
@@ -163,8 +203,8 @@ function NovoImovel() {
                 </div>
 
                 <div>
-                    <label>Bairro</label>
-                    <input type="text" name="bairro" value={form.bairro} onChange={handleChange} />
+                    <label>Estado</label>
+                    <input type="text" value={form.estado} disabled />
                 </div>
 
                 <div>
@@ -183,12 +223,17 @@ function NovoImovel() {
                 </div>
 
                 <div>
+                    <label>Bairro</label>
+                    <input type="text" name="bairro" value={form.bairro} onChange={handleChange} />
+                </div>
+
+                <div>
                     <label>Descrição</label>
                     <textarea name="descricao" value={form.descricao} onChange={handleChange} />
                 </div>
 
                 {erro && <p>{erro}</p>}
-                <button type="submit">Anunciar</button>
+                <button type="submit" disabled={cidadeValida === false}>Anunciar</button>
             </form>
         </div>
     )
