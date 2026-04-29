@@ -4,6 +4,10 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
+import ImovelDetalhe from './pages/ImovelDetalhe'
+import NovoImovel from './pages/NovoImovel'
+import MeusImoveis from './pages/MeusImoveis'
+import EditarImovel from './pages/EditarImovel'
 
 function App() {
     return (
@@ -11,12 +15,12 @@ function App() {
             <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/imoveis/:id" element={<div>Detalhe</div>} />
+                <Route path="/imoveis/:id" element={<ImovelDetalhe />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/meus-imoveis" element={<div>Meus Imóveis</div>} />
-                <Route path="/imoveis/novo" element={<div>Novo Imóvel</div>} />
-                <Route path="/imoveis/:id/editar" element={<div>Editar Imóvel</div>} />
+                <Route path="/meus-imoveis" element={<MeusImoveis />} />
+                <Route path="/imoveis/novo" element={<NovoImovel />} />
+                <Route path="/imoveis/:id/editar" element={<EditarImovel />} />
             </Routes>
         </BrowserRouter>
     )
