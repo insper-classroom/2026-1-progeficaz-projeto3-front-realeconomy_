@@ -12,12 +12,22 @@ function Login() {
     const { login } = useAuth()
     const navigate = useNavigate()
 
+    function mascaraCpf(valor) {
+        return valor
+            .replace(/\D/g, '')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+            .slice(0, 14)
+    }
+
     async function handleSubmit(e) {
         e.preventDefault()
         setErro('')
 
         try {
-            const resposta = await api.post('/auth/login', { cpf, senha })
+            const cpfLimpo = cpf.replace(/\D/g, '')
+            const resposta = await api.post('/auth/login', { cpf: cpfLimpo, senha })
             login(resposta.data)
             navigate('/')
         } catch (err) {
@@ -36,8 +46,9 @@ function Login() {
                         <input
                             type="text"
                             value={cpf}
-                            onChange={(e) => setCpf(e.target.value)}
+                            onChange={(e) => setCpf(mascaraCpf(e.target.value))}
                             placeholder="000.000.000-00"
+                            maxLength={14}
                         />
                     </div>
                     <div className='form-group'>
