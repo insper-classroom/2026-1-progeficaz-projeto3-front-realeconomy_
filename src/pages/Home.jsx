@@ -1,30 +1,51 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
+import Slider from 'rc-slider'
+import 'rc-slider/assets/index.css'
 
 function Home() {
     const [imoveis, setImoveis] = useState([])
+    const [cidades, setCidades] = useState([])
     const [filtros, setFiltros] = useState({
-        cidade: '',
-        tipo_negocio: '',
-        tipo_imovel: '',
-        preco_min: '',
-        preco_max: ''
+        cidades: [],
+        tipos_negocio: [],
+        tipos_imovel: [],
+        preco_min: 0,
+        preco_max: 5000000
     })
     const navigate = useNavigate()
 
+    const TIPOS_NEGOCIO = ['venda', 'aluguel']
+    const TIPOS_IMOVEL = ['casa', 'apartamento', 'terreno', 'comercial', 'chacara']
+
     useEffect(() => {
-        buscarImoveis()
+        buscarCidades()
     }, [])
 
-    async function buscarImoveis() {
+    useEffect(() => {
+        buscarImoveis(filtros)
+    }, [filtros])
+
+    async function buscarCidades() {
+        try {
+            const resposta = await api.get('/cidades')
+            setCidades(resposta.data)
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    async function buscarImoveis(filtrosAtuais) {
         try {
             const params = {}
-            if (filtros.cidade) params.cidade = filtros.cidade
-            if (filtros.tipo_negocio) params.tipo_negocio = filtros.tipo_negocio
-            if (filtros.tipo_imovel) params.tipo_imovel = filtros.tipo_imovel
-            if (filtros.preco_min) params.preco_min = filtros.preco_min
-            if (filtros.preco_max) params.preco_max = filtros.preco_max
+            if (filtrosAtuais.cidades.length > 0) params.cidade = filtrosAtuais.cidades.join(',')
+            if (filtrosAtuais.tipos_negocio.length > 0) params.tipo_negocio = filtrosAtuais.tipos_negocio.join(',')
+            if (filtrosAtuais.tipos_imovel.length > 0) params.tipo_imovel = filtrosAtuais.tipos_imovel.join(',')
+            if (filtrosAtuais.preco_min > 0) params.preco_min = filtrosAtuais.preco_min
+            if (filtrosAtuais.preco_max < 5000000) params.preco_max = filtrosAtuais.preco_max
+
+            console.log('Filtros enviados:', params)
 
             const resposta = await api.get('/imoveis', { params })
             setImoveis(resposta.data)
@@ -33,50 +54,72 @@ function Home() {
         }
     }
 
-    function handleFiltro(e) {
-        setFiltros({ ...filtros, [e.target.name]: e.target.value })
+    function toggleFiltro(campo, valor) {
+        setFiltros(prev => {
+            const lista = prev[campo].includes(valor)
+                ? prev[campo].filter(v => v !== valor)
+                : [...prev[campo], valor]
+            return { ...prev, [campo]: lista }
+        })
     }
 
     return (
         <div>
             <h1>Imóveis disponíveis</h1>
 
-            {/* Filtros */}
+            {/* Filtro tipo de negócio */}
             <div>
-                <input
-                    name="cidade"
-                    placeholder="Cidade"
-                    value={filtros.cidade}
-                    onChange={handleFiltro}
+                <p>Tipo de negócio:</p>
+                {TIPOS_NEGOCIO.map(tipo => (
+                    <button
+                        key={tipo}
+                        onClick={() => toggleFiltro('tipos_negocio', tipo)}
+                        style={{ fontWeight: filtros.tipos_negocio.includes(tipo) ? 'bold' : 'normal' }}
+                    >
+                        {tipo}
+                    </button>
+                ))}
+            </div>
+
+            {/* Filtro tipo de imóvel */}
+            <div>
+                <p>Tipo de imóvel:</p>
+                {TIPOS_IMOVEL.map(tipo => (
+                    <button
+                        key={tipo}
+                        onClick={() => toggleFiltro('tipos_imovel', tipo)}
+                        style={{ fontWeight: filtros.tipos_imovel.includes(tipo) ? 'bold' : 'normal' }}
+                    >
+                        {tipo}
+                    </button>
+                ))}
+            </div>
+
+            {/* Filtro cidade */}
+            <div>
+                <p>Cidade:</p>
+                {cidades.map(cidade => (
+                    <button
+                        key={cidade._id}
+                        onClick={() => toggleFiltro('cidades', cidade.nome)}
+                        style={{ fontWeight: filtros.cidades.includes(cidade.nome) ? 'bold' : 'normal' }}
+                    >
+                        {cidade.nome}
+                    </button>
+                ))}
+            </div>
+
+            {/* Filtro preço */}
+            <div>
+                <p>Preço: R$ {Number(filtros.preco_min).toLocaleString('pt-BR')} — R$ {Number(filtros.preco_max).toLocaleString('pt-BR')}</p>
+                <Slider
+                    range
+                    min={0}
+                    max={5000000}
+                    step={50000}
+                    value={[filtros.preco_min, filtros.preco_max]}
+                    onChange={(valores) => setFiltros({ ...filtros, preco_min: valores[0], preco_max: valores[1] })}
                 />
-                <select name="tipo_negocio" value={filtros.tipo_negocio} onChange={handleFiltro}>
-                    <option value="">Tipo de negócio</option>
-                    <option value="venda">Venda</option>
-                    <option value="aluguel">Aluguel</option>
-                </select>
-                <select name="tipo_imovel" value={filtros.tipo_imovel} onChange={handleFiltro}>
-                    <option value="">Tipo de imóvel</option>
-                    <option value="casa">Casa</option>
-                    <option value="apartamento">Apartamento</option>
-                    <option value="terreno">Terreno</option>
-                    <option value="comercial">Comercial</option>
-                    <option value="chacara">Chácara</option>
-                </select>
-                <input
-                    name="preco_min"
-                    placeholder="Preço mínimo"
-                    type="number"
-                    value={filtros.preco_min}
-                    onChange={handleFiltro}
-                />
-                <input
-                    name="preco_max"
-                    placeholder="Preço máximo"
-                    type="number"
-                    value={filtros.preco_max}
-                    onChange={handleFiltro}
-                />
-                <button onClick={buscarImoveis}>Buscar</button>
             </div>
 
             {/* Cards */}
