@@ -9,12 +9,18 @@ function EditarImovel() {
         tipo_imovel: '',
         tipo_negocio: [],
         cep: '',
+        logradouro: '',
         numero: '',
+        complemento: '',
+        bairro: '',
+        cidade: '',
+        estado: '',
         preco_venda: '',
         preco_aluguel: '',
         descricao: ''
     })
     const [erro, setErro] = useState('')
+    const [buscandoCep, setBuscandoCep] = useState(false)
 
     const TIPOS_IMOVEL = ['casa', 'apartamento', 'terreno', 'comercial', 'chacara']
 
@@ -27,7 +33,12 @@ function EditarImovel() {
                     tipo_imovel: imovel.tipo_imovel,
                     tipo_negocio: imovel.tipo_negocio,
                     cep: imovel.cep,
+                    logradouro: imovel.logradouro || '',
                     numero: imovel.numero,
+                    complemento: imovel.complemento || '',
+                    bairro: imovel.bairro || '',
+                    cidade: imovel.cidade || '',
+                    estado: imovel.estado || '',
                     preco_venda: imovel.preco_venda || '',
                     preco_aluguel: imovel.preco_aluguel || '',
                     descricao: imovel.descricao
@@ -39,6 +50,34 @@ function EditarImovel() {
         }
         buscarImovel()
     }, [id])
+
+    async function handleCep(e) {
+        const cep = e.target.value.replace(/\D/g, '')
+        setForm(prev => ({ ...prev, cep: e.target.value }))
+
+        if (cep.length === 8) {
+            setBuscandoCep(true)
+            try {
+                const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                const dados = await resposta.json()
+                if (!dados.erro) {
+                    setForm(prev => ({
+                        ...prev,
+                        logradouro: dados.logradouro || '',
+                        bairro: dados.bairro || '',
+                        cidade: dados.localidade || '',
+                        estado: dados.uf || ''
+                    }))
+                } else {
+                    setErro('CEP não encontrado')
+                }
+            } catch {
+                setErro('Erro ao buscar CEP')
+            } finally {
+                setBuscandoCep(false)
+            }
+        }
+    }
 
     function handleTipoNegocio(tipo) {
         setForm(prev => {
@@ -67,7 +106,10 @@ function EditarImovel() {
                 tipo_imovel: form.tipo_imovel,
                 tipo_negocio: form.tipo_negocio,
                 cep: form.cep,
+                logradouro: form.logradouro,
                 numero: form.numero,
+                complemento: form.complemento,
+                bairro: form.bairro,
                 descricao: form.descricao
             }
             if (form.tipo_negocio.includes('venda')) dados.preco_venda = parseFloat(form.preco_venda)
@@ -97,14 +139,16 @@ function EditarImovel() {
 
                 <div>
                     <label>Tipo de Negócio</label>
-                    <button type="button" onClick={() => handleTipoNegocio('venda')}
-                        style={{ fontWeight: form.tipo_negocio.includes('venda') ? 'bold' : 'normal' }}>
-                        Venda
-                    </button>
-                    <button type="button" onClick={() => handleTipoNegocio('aluguel')}
-                        style={{ fontWeight: form.tipo_negocio.includes('aluguel') ? 'bold' : 'normal' }}>
-                        Aluguel
-                    </button>
+                    {['venda', 'aluguel'].map(tipo => (
+                        <button
+                            key={tipo}
+                            type="button"
+                            onClick={() => handleTipoNegocio(tipo)}
+                            style={{ fontWeight: form.tipo_negocio.includes(tipo) ? 'bold' : 'normal' }}
+                        >
+                            {tipo}
+                        </button>
+                    ))}
                 </div>
 
                 {form.tipo_negocio.includes('venda') && (
@@ -123,12 +167,45 @@ function EditarImovel() {
 
                 <div>
                     <label>CEP</label>
-                    <input type="text" name="cep" value={form.cep} onChange={handleChange} />
+                    <input
+                        type="text"
+                        name="cep"
+                        value={form.cep}
+                        onChange={handleCep}
+                        placeholder="00000-000"
+                        maxLength={9}
+                    />
+                    {buscandoCep && <span>Buscando CEP...</span>}
+                </div>
+
+                <div>
+                    <label>Cidade</label>
+                    <input type="text" value={form.cidade} disabled />
+                </div>
+
+                <div>
+                    <label>Estado</label>
+                    <input type="text" value={form.estado} disabled />
+                </div>
+
+                <div>
+                    <label>Bairro</label>
+                    <input type="text" name="bairro" value={form.bairro} onChange={handleChange} />
+                </div>
+
+                <div>
+                    <label>Logradouro</label>
+                    <input type="text" name="logradouro" value={form.logradouro} onChange={handleChange} />
                 </div>
 
                 <div>
                     <label>Número</label>
                     <input type="text" name="numero" value={form.numero} onChange={handleChange} />
+                </div>
+
+                <div>
+                    <label>Complemento</label>
+                    <input type="text" name="complemento" value={form.complemento} onChange={handleChange} placeholder="Apto, casa, etc." />
                 </div>
 
                 <div>
