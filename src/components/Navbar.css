@@ -1,0 +1,62 @@
+.navbar {
+    background-color: var(--verde-escuro);
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--sombra);
+}
+
+.navbar-logo {
+    color: var(--branco);
+    font-family: 'Georgia', serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.navbar-logo:hover {
+    color: var(--verde-claro);
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.navbar-links a {
+    color: var(--branco);
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+    transition: var(--transition);
+}
+
+.navbar-links a:hover {
+    opacity: 1;
+    color: var(--verde-claro);
+}
+
+.navbar-usuario {
+    color: var(--verde-claro);
+    font-size: 14px;
+}
+
+.navbar-btn-sair {
+    background-color: transparent;
+    color: var(--branco);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 6px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.navbar-btn-sair:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--branco);
+}

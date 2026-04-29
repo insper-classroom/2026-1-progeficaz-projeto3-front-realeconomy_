@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import './Navbar.css'
 
 function Navbar() {
     const { usuario, logout } = useAuth()
@@ -11,18 +12,20 @@ function Navbar() {
     }
 
     return (
-        <nav>
-            <Link to="/">RealEconomy</Link>
-            <div>
+        <nav className='navbar'>
+            <Link to="/" className='navbar-logo'>RealEconomy</Link>
+            <div className='navbar-links'>
                 {usuario ? (
                     <>
-                        <span>Olá, {usuario.nome}</span>
+                        <span className='navbar-usuario'>Olá, {usuario.nome}</span>
                         <Link to="/meus-imoveis">Meus Imóveis</Link>
                         <Link to="/imoveis/novo">Anunciar</Link>
                         {usuario.role === 'admin' && (
                             <Link to="/admin">Admin</Link>
                         )}
-                        <button onClick={handleLogout}>Sair</button>
+                        <button className='navbar-btn-sair' onClick={handleLogout}>
+                            Sair
+                        </button>
                     </>
                 ) : (
                     <>
