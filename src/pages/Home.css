@@ -1,0 +1,132 @@
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.home-titulo {
+    font-size: 32px;
+    margin-bottom: 32px;
+}
+
+/* Filtros */
+.filtros-container {
+    background-color: var(--branco);
+    padding: 24px;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    margin-bottom: 40px;
+}
+
+.filtros-titulo {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cinza-medio);
+    margin-bottom: 12px;
+}
+
+.filtros-grupo {
+    margin-bottom: 20px;
+}
+
+.filtros-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filtros-preco {
+    margin-top: 8px;
+    max-width: 400px;
+}
+
+.filtros-preco-valores {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--cinza-medio);
+    margin-bottom: 12px;
+     max-width: 400px;
+}
+
+/* Cards */
+.imoveis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.imovel-card {
+    background-color: var(--branco);
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.imovel-card:hover {
+    box-shadow: var(--sombra-hover);
+    transform: translateY(-2px);
+}
+
+.imovel-card-body {
+    padding: 20px;
+}
+
+.imovel-card-tipo {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cinza-medio);
+    margin-bottom: 8px;
+}
+
+.imovel-card-titulo {
+    font-size: 18px;
+    color: var(--verde-escuro);
+    margin-bottom: 8px;
+}
+
+.imovel-card-endereco {
+    font-size: 13px;
+    color: var(--cinza-medio);
+    margin-bottom: 12px;
+}
+
+.imovel-card-negocio {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.imovel-card-badge {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background-color: var(--verde-claro);
+    color: var(--verde-escuro);
+}
+
+.imovel-card-preco {
+    font-size: 20px;
+    color: var(--verde-escuro);
+    font-family: 'Georgia', serif;
+}
+
+.imovel-card-preco-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cinza-medio);
+}
+
+.imoveis-vazio {
+    text-align: center;
+    color: var(--cinza-medio);
+    padding: 60px 0;
+    font-size: 16px;
+}
