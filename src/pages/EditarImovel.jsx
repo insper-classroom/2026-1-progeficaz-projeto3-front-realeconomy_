@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import api from '../services/api'
-
+import './NovoImovel.css'
 
 function EditarImovel() {
     const { id } = useParams()
@@ -154,61 +154,64 @@ function EditarImovel() {
     }
 
     return (
-        <div>
-            {/* Cidades disponíveis */}
-            <div>
-                <p>Cidades disponíveis para anúncios:</p>
-                <div>
-                    {cidadesDisponiveis.map(cidade => (
-                        <span key={cidade._id}>
-                            {cidade.nome} — {cidade.estado}
-                        </span>
-                    ))}
-                </div>
-            </div>
+    <div className="novo-imovel-container">
+        <h1>Editar Imóvel</h1>
 
-            <h1>Editar Imóvel</h1>
+        <div className="cidades-disponiveis">
+            <p>Cidades disponíveis para anúncios</p>
+            <div className="cidades-tags">
+                {cidadesDisponiveis.map(cidade => (
+                    <span key={cidade._id} className="cidade-tag">
+                        {cidade.nome} — {cidade.estado}
+                    </span>
+                ))}
+            </div>
+        </div>
+
+        <div className="novo-imovel-card">
             <form onSubmit={handleSubmit}>
 
-                <div>
+                <div className="form-group">
                     <label>Tipo de Imóvel</label>
                     <select name="tipo_imovel" value={form.tipo_imovel} onChange={handleChange}>
                         <option value="">Selecione</option>
                         {TIPOS_IMOVEL.map(t => (
-                            <option key={t} value={t}>{t}</option>
+                            <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
                         ))}
                     </select>
                 </div>
 
-                <div>
+                <div className="form-group">
                     <label>Tipo de Negócio</label>
-                    {['venda', 'aluguel'].map(tipo => (
-                        <button
-                            key={tipo}
-                            type="button"
-                            onClick={() => handleTipoNegocio(tipo)}
-                            style={{ fontWeight: form.tipo_negocio.includes(tipo) ? 'bold' : 'normal' }}
-                        >
-                            {tipo}
-                        </button>
-                    ))}
+                    <div className="tipo-negocio-tags">
+                        {['venda', 'aluguel'].map(tipo => (
+                            <button
+                                key={tipo}
+                                type="button"
+                                className={`tag ${form.tipo_negocio.includes(tipo) ? 'ativa' : ''}`}
+                                onClick={() => handleTipoNegocio(tipo)}
+                            >
+                                {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {form.tipo_negocio.includes('venda') && (
-                    <div>
+                    <div className="form-group">
                         <label>Preço de Venda</label>
-                        <input type="number" name="preco_venda" value={form.preco_venda} onChange={handleChange} />
+                        <input type="number" name="preco_venda" value={form.preco_venda} onChange={handleChange} placeholder="R$ 0,00" />
                     </div>
                 )}
 
                 {form.tipo_negocio.includes('aluguel') && (
-                    <div>
+                    <div className="form-group">
                         <label>Preço de Aluguel</label>
-                        <input type="number" name="preco_aluguel" value={form.preco_aluguel} onChange={handleChange} />
+                        <input type="number" name="preco_aluguel" value={form.preco_aluguel} onChange={handleChange} placeholder="R$ 0,00" />
                     </div>
                 )}
 
-                <div>
+                <div className="form-group">
                     <label>CEP</label>
                     <input
                         type="text"
@@ -218,52 +221,58 @@ function EditarImovel() {
                         placeholder="00000-000"
                         maxLength={9}
                     />
-                    {buscandoCep && <span>Buscando CEP...</span>}
-                    {cidadeValida === true && <span>✅ Cidade disponível!</span>}
-                    {cidadeValida === false && <span>❌ Cidade não disponível</span>}
+                    {buscandoCep && <span className="cep-feedback cep-buscando">Buscando CEP...</span>}
+                    {cidadeValida === true && <span className="cep-feedback cep-valido">✅ Cidade disponível!</span>}
+                    {cidadeValida === false && <span className="cep-feedback cep-invalido">❌ Cidade não disponível</span>}
                 </div>
 
-                <div>
-                    <label>Cidade</label>
-                    <input type="text" value={form.cidade} disabled />
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>Cidade</label>
+                        <input type="text" value={form.cidade} disabled />
+                    </div>
+                    <div className="form-group">
+                        <label>Estado</label>
+                        <input type="text" value={form.estado} disabled />
+                    </div>
                 </div>
 
-                <div>
-                    <label>Estado</label>
-                    <input type="text" value={form.estado} disabled />
-                </div>
-
-                <div>
+                <div className="form-group">
                     <label>Logradouro</label>
                     <input type="text" name="logradouro" value={form.logradouro} onChange={handleChange} />
                 </div>
 
-                <div>
-                    <label>Número</label>
-                    <input type="text" name="numero" value={form.numero} onChange={handleChange} />
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>Número</label>
+                        <input type="text" name="numero" value={form.numero} onChange={handleChange} />
+                    </div>
+                    <div className="form-group">
+                        <label>Complemento</label>
+                        <input type="text" name="complemento" value={form.complemento} onChange={handleChange} placeholder="Apto, casa, etc." />
+                    </div>
                 </div>
 
-                <div>
-                    <label>Complemento</label>
-                    <input type="text" name="complemento" value={form.complemento} onChange={handleChange} placeholder="Apto, casa, etc." />
-                </div>
-
-                <div>
+                <div className="form-group">
                     <label>Bairro</label>
                     <input type="text" name="bairro" value={form.bairro} onChange={handleChange} />
                 </div>
 
-                <div>
+                <div className="form-group">
                     <label>Descrição</label>
                     <textarea name="descricao" value={form.descricao} onChange={handleChange} />
                 </div>
 
-                {erro && <p>{erro}</p>}
-                <button type="submit" disabled={cidadeValida === false}>Salvar alterações</button>
-                <button type="button" onClick={() => navigate('/meus-imoveis')}>Cancelar</button>
+                {erro && <p className="erro">{erro}</p>}
+
+                <div className="novo-imovel-actions">
+                    <button type="button" className="btn-secondary" onClick={() => navigate('/meus-imoveis')}>Cancelar</button>
+                    <button type="submit" className="btn-primary" disabled={cidadeValida === false}>Salvar alterações</button>
+                </div>
             </form>
         </div>
-    )
+    </div>
+)
 }
 
 export default EditarImovel
