@@ -1,0 +1,113 @@
+.detalhe-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.detalhe-voltar {
+    background: none;
+    border: none;
+    color: var(--verde-medio);
+    font-size: 14px;
+    padding: 0;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.detalhe-voltar:hover {
+    color: var(--verde-escuro);
+}
+
+.detalhe-card {
+    background-color: var(--branco);
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    overflow: hidden;
+}
+
+.detalhe-body {
+    padding: 40px;
+}
+
+.detalhe-tipo {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cinza-medio);
+    margin-bottom: 8px;
+}
+
+.detalhe-titulo {
+    font-size: 28px;
+    color: var(--verde-escuro);
+    margin-bottom: 16px;
+}
+
+.detalhe-badges {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.detalhe-badge {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background-color: var(--verde-claro);
+    color: var(--verde-escuro);
+}
+
+.detalhe-divider {
+    border: none;
+    border-top: 1px solid var(--cinza-claro);
+    margin: 24px 0;
+}
+
+.detalhe-secao-titulo {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cinza-medio);
+    margin-bottom: 12px;
+}
+
+.detalhe-endereco {
+    font-size: 16px;
+    color: var(--cinza-escuro);
+    line-height: 1.8;
+}
+
+.detalhe-precos {
+    display: flex;
+    gap: 40px;
+    margin-top: 24px;
+}
+
+.detalhe-preco-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detalhe-preco-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cinza-medio);
+}
+
+.detalhe-preco-valor {
+    font-size: 28px;
+    color: var(--verde-escuro);
+    font-family: 'Georgia', serif;
+}
+
+.detalhe-descricao {
+    font-size: 15px;
+    color: var(--cinza-escuro);
+    line-height: 1.8;
+}
