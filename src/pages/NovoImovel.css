@@ -1,0 +1,84 @@
+.novo-imovel-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.novo-imovel-container h1 {
+    font-size: 28px;
+    margin-bottom: 32px;
+}
+
+.novo-imovel-card {
+    background-color: var(--branco);
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+}
+
+.cidades-disponiveis {
+    background-color: var(--cinza-claro);
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+}
+
+.cidades-disponiveis p {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cinza-medio);
+    margin-bottom: 10px;
+}
+
+.cidades-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.cidade-tag {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background-color: var(--verde-claro);
+    color: var(--verde-escuro);
+}
+
+.tipo-negocio-tags {
+    display: flex;
+    gap: 8px;
+}
+
+.cep-feedback {
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.cep-buscando {
+    color: var(--cinza-medio);
+}
+
+.cep-valido {
+    color: var(--sucesso);
+}
+
+.cep-invalido {
+    color: var(--erro);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.novo-imovel-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.novo-imovel-actions .btn-primary {
+    flex: 1;
+}
