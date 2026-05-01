@@ -60,3 +60,25 @@
     background-color: rgba(255, 255, 255, 0.1);
     border-color: var(--branco);
 }
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .navbar-logo {
+        font-size: 16px;
+    }
+
+    .navbar-links {
+        gap: 12px;
+    }
+
+    .navbar-links a {
+        font-size: 12px;
+    }
+
+    .navbar-usuario {
+        display: none;
+    }
+}
