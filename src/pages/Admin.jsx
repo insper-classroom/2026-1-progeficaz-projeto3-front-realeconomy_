@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import api from '../services/api'
+import './Admin.css'
 
 const ESTADOS = [
     { uf: 'AC', nome: 'Acre' }, { uf: 'AL', nome: 'Alagoas' },
@@ -97,52 +98,55 @@ function Admin() {
         }
     }
 
-    return (
-        <div>
+        return (
+        <div className="admin-container">
             <h1>Painel Admin</h1>
 
-            <h2>Adicionar Cidade</h2>
-            <form onSubmit={handleAdicionarCidade}>
-                <div>
-                    <label>Estado</label>
-                    <select value={estadoSelecionado} onChange={(e) => buscarCidadesIBGE(e.target.value)}>
-                        <option value="">Selecione um estado</option>
-                        {ESTADOS.map(e => (
-                            <option key={e.uf} value={e.uf}>{e.nome}</option>
+            <div className="admin-secao">
+                <h2>Adicionar Cidade</h2>
+                <form onSubmit={handleAdicionarCidade}>
+                    <div className="admin-form">
+                        <div className="form-group">
+                            <label>Estado</label>
+                            <select value={estadoSelecionado} onChange={(e) => buscarCidadesIBGE(e.target.value)}>
+                                <option value="">Selecione um estado</option>
+                                {ESTADOS.map(e => (
+                                    <option key={e.uf} value={e.uf}>{e.nome}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>Cidade</label>
+                            <select value={cidadeSelecionada} onChange={(e) => setCidadeSelecionada(e.target.value)} disabled={cidadesIBGE.length === 0}>
+                                <option value="">{buscando ? 'Buscando...' : 'Selecione uma cidade'}</option>
+                                {cidadesIBGE.map(c => (
+                                    <option key={c.id} value={c.nome}>{c.nome}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <button type="submit" className="btn-primary">Adicionar</button>
+                    </div>
+                    {erro && <p className="erro">{erro}</p>}
+                    {sucesso && <p className="sucesso">{sucesso}</p>}
+                </form>
+
+                <h3>Cidades cadastradas</h3>
+                {cidades.length === 0 ? (
+                    <p className="admin-vazio">Nenhuma cidade cadastrada</p>
+                ) : (
+                    <div className="admin-cidades-lista">
+                        {cidades.map(cidade => (
+                            <div key={cidade._id} className="admin-cidade-item">
+                                <span>
+                                    <span className="admin-cidade-nome">{cidade.nome}</span>
+                                    <span className="admin-cidade-uf">— {cidade.estado}</span>
+                                </span>
+                                <button className="btn-danger" onClick={() => handleDeletarCidade(cidade._id)}>Remover</button>
+                            </div>
                         ))}
-                    </select>
-                </div>
-
-                {buscando && <p>Buscando cidades...</p>}
-
-                {cidadesIBGE.length > 0 && (
-                    <div>
-                        <label>Cidade</label>
-                        <select value={cidadeSelecionada} onChange={(e) => setCidadeSelecionada(e.target.value)}>
-                            <option value="">Selecione uma cidade</option>
-                            {cidadesIBGE.map(c => (
-                                <option key={c.id} value={c.nome}>{c.nome}</option>
-                            ))}
-                        </select>
                     </div>
                 )}
-
-                {erro && <p>{erro}</p>}
-                {sucesso && <p>{sucesso}</p>}
-                <button type="submit">Adicionar cidade</button>
-            </form>
-
-            <h3>Cidades cadastradas</h3>
-            {cidades.length === 0 ? (
-                <p>Nenhuma cidade cadastrada</p>
-            ) : (
-                cidades.map(cidade => (
-                    <div key={cidade._id}>
-                        <span>{cidade.nome} — {cidade.estado}</span>
-                        <button onClick={() => handleDeletarCidade(cidade._id)}>Remover</button>
-                    </div>
-                ))
-            )}
+            </div>
         </div>
     )
 }

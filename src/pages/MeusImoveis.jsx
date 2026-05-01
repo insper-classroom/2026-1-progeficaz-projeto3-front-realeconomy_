@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
+import './MeusImoveis.css'
 
 function MeusImoveis() {
     const [imoveis, setImoveis] = useState([])
@@ -30,24 +31,43 @@ function MeusImoveis() {
     }
 
     return (
-        <div>
-            <h1>Meus Imóveis</h1>
-            <button onClick={() => navigate('/imoveis/novo')}>Anunciar novo imóvel</button>
+        <div className="meus-imoveis-container">
+            <div className="meus-imoveis-header">
+                <h1>Meus Imóveis</h1>
+                <button className="btn-primary" onClick={() => navigate('/imoveis/novo')}>
+                    + Anunciar imóvel
+                </button>
+            </div>
 
             {imoveis.length === 0 ? (
-                <p>Você ainda não tem imóveis anunciados</p>
+                <p className="meus-imoveis-vazio">Você ainda não tem imóveis anunciados</p>
             ) : (
-                imoveis.map((imovel) => (
-                    <div key={imovel._id}>
-                        <h2>{imovel.tipo_imovel}</h2>
-                        <p>{imovel.logradouro}, {imovel.numero} — {imovel.cidade}/{imovel.estado}</p>
-                        <p>{imovel.tipo_negocio.join(' | ')}</p>
-                        {imovel.preco_venda && <p>Venda: R$ {imovel.preco_venda.toLocaleString('pt-BR')}</p>}
-                        {imovel.preco_aluguel && <p>Aluguel: R$ {imovel.preco_aluguel.toLocaleString('pt-BR')}</p>}
-                        <button onClick={() => navigate(`/imoveis/${imovel._id}/editar`)}>Editar</button>
-                        <button onClick={() => deletarImovel(imovel._id)}>Excluir</button>
-                    </div>
-                ))
+                <div className="meus-imoveis-lista">
+                    {imoveis.map((imovel) => (
+                        <div key={imovel._id} className="meu-imovel-card">
+                            <div className="meu-imovel-info">
+                                <p className="meu-imovel-tipo">{imovel.tipo_imovel}</p>
+                                <p className="meu-imovel-titulo">{imovel.logradouro}, {imovel.numero}</p>
+                                <p className="meu-imovel-endereco">{imovel.bairro} — {imovel.cidade}/{imovel.estado}</p>
+                                <div className="meu-imovel-badges">
+                                    {imovel.tipo_negocio.map(tipo => (
+                                        <span key={tipo} className="meu-imovel-badge">{tipo}</span>
+                                    ))}
+                                </div>
+                                {imovel.preco_venda && (
+                                    <p className="meu-imovel-preco">R$ {imovel.preco_venda.toLocaleString('pt-BR')}</p>
+                                )}
+                                {imovel.preco_aluguel && (
+                                    <p className="meu-imovel-preco">R$ {imovel.preco_aluguel.toLocaleString('pt-BR')}/mês</p>
+                                )}
+                            </div>
+                            <div className="meu-imovel-actions">
+                                <button className="btn-secondary" onClick={() => navigate(`/imoveis/${imovel._id}/editar`)}>Editar</button>
+                                <button className="btn-danger" onClick={() => deletarImovel(imovel._id)}>Excluir</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     )

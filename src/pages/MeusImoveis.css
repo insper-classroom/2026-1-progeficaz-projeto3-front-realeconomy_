@@ -1,0 +1,96 @@
+.meus-imoveis-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.meus-imoveis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.meus-imoveis-header h1 {
+    font-size: 28px;
+}
+
+.meus-imoveis-vazio {
+    text-align: center;
+    color: var(--cinza-medio);
+    padding: 60px 0;
+    font-size: 16px;
+}
+
+.meus-imoveis-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.meu-imovel-card {
+    background-color: var(--branco);
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.meu-imovel-card:hover {
+    box-shadow: var(--sombra-hover);
+}
+
+.meu-imovel-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.meu-imovel-tipo {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cinza-medio);
+}
+
+.meu-imovel-titulo {
+    font-size: 18px;
+    color: var(--verde-escuro);
+}
+
+.meu-imovel-endereco {
+    font-size: 13px;
+    color: var(--cinza-medio);
+}
+
+.meu-imovel-badges {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.meu-imovel-badge {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background-color: var(--verde-claro);
+    color: var(--verde-escuro);
+}
+
+.meu-imovel-preco {
+    font-size: 18px;
+    color: var(--verde-escuro);
+    font-family: 'Georgia', serif;
+    margin-top: 4px;
+}
+
+.meu-imovel-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
