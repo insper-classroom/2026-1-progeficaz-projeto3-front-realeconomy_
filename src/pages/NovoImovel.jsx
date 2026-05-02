@@ -190,7 +190,7 @@ function NovoImovel() {
 
 
 
-                    <div className="form-group">
+                <div className="form-group">
                 <label>Imagens</label>
                 <input
                     type="file"
@@ -198,13 +198,42 @@ function NovoImovel() {
                     multiple
                     onChange={handleImagens}
                 />
-                {uploadando && <span className="cep-feedback cep-buscando">Enviando imagens...</span>}
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-                    {imagens.map((url, index) => (
-                        <img key={index} src={url} alt="preview" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }} />
-                    ))}
+                    {uploadando && <span className="cep-feedback cep-buscando">Enviando imagens...</span>}
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+                        {imagens.map((url, index) => (
+                            <div key={index} style={{ position: 'relative' }}>
+                                <img
+                                    src={url}
+                                    alt="preview"
+                                    style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setImagens(imagens.filter((_, i) => i !== index))}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '-6px',
+                                        right: '-6px',
+                                        background: 'var(--erro)',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '50%',
+                                        width: '20px',
+                                        height: '20px',
+                                        fontSize: '12px',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: 0
+                                    }}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
 
 
                     <div className="form-group">
