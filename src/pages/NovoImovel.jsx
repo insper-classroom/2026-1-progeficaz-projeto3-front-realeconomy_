@@ -23,6 +23,33 @@ function NovoImovel() {
     const [cidadesDisponiveis, setCidadesDisponiveis] = useState([])
     const [cidadeValida, setCidadeValida] = useState(null)
     const navigate = useNavigate()
+    const [imagens, setImagens] = useState([])
+    const [uploadando, setUploadando] = useState(false)
+
+    
+    async function handleImagens(e) {
+    const arquivos = Array.from(e.target.files)
+    setUploadando(true)
+
+        try {
+            const urls = []
+            for (const arquivo of arquivos) {
+                const formData = new FormData()
+                formData.append('imagem', arquivo)
+
+                const resposta = await api.post('/imagens', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                })
+                urls.push(resposta.data.url)
+            }
+            setImagens(prev => [...prev, ...urls])
+        } catch (err) {
+            setErro('Erro ao fazer upload das imagens')
+        } finally {
+            setUploadando(false)
+        }
+    }
+
 
     const TIPOS_IMOVEL = ['casa', 'apartamento', 'terreno', 'comercial', 'chacara']
 
@@ -116,10 +143,13 @@ function NovoImovel() {
                 bairro: form.bairro,
                 cidade: form.cidade,
                 estado: form.estado,
-                descricao: form.descricao
+                descricao: form.descricao,
+                imagens: imagens
             }
             if (form.tipo_negocio.includes('venda')) dados.preco_venda = parseFloat(form.preco_venda)
             if (form.tipo_negocio.includes('aluguel')) dados.preco_aluguel = parseFloat(form.preco_aluguel)
+
+        
 
             await api.post('/imoveis', dados)
             navigate('/meus-imoveis')
@@ -143,6 +173,8 @@ function NovoImovel() {
                 </div>
             </div>
 
+            
+
             <div className="novo-imovel-card">
                 <form onSubmit={handleSubmit}>
 
@@ -155,6 +187,25 @@ function NovoImovel() {
                             ))}
                         </select>
                     </div>
+
+
+
+                    <div className="form-group">
+                <label>Imagens</label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImagens}
+                />
+                {uploadando && <span className="cep-feedback cep-buscando">Enviando imagens...</span>}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+                    {imagens.map((url, index) => (
+                        <img key={index} src={url} alt="preview" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }} />
+                    ))}
+                </div>
+            </div>
+
 
                     <div className="form-group">
                         <label>Tipo de Negócio</label>
