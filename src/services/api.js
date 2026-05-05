@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL
+    baseURL: 'http://localhost:5000'
 })
 
 // Adiciona o access_token em todas as requisições
@@ -24,7 +24,7 @@ api.interceptors.response.use(
 
             try {
                 const refreshToken = localStorage.getItem('refresh_token')
-                const resposta = await axios.post(`${process.env.REACT_APP_API_URL}/auth/refresh`, {}, {
+                const resposta = await axios.post('http://localhost:5000/auth/refresh', {}, {
                     headers: { Authorization: `Bearer ${refreshToken}` }
                 })
 
